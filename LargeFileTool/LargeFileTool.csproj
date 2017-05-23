@@ -1,0 +1,396 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B65474E3-DC4B-452B-9B2D-A872120A8CEB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LargeFileTool</RootNamespace>
+    <AssemblyName>LargeFileTool</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Esent.Collections">
+      <HintPath>Lib\Esent.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Esent.Interop">
+      <HintPath>Lib\Esent.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Database\Constants.cs" />
+    <Compile Include="Database\DataReader.cs" />
+    <Compile Include="Database\DataServer.cs" />
+    <Compile Include="Database\SqlCommandBuilder.cs" />
+    <Compile Include="Data\AdjustLocus.cs" />
+    <Compile Include="Data\AlleleVariantManager.cs" />
+    <Compile Include="Data\ColumnMapping.cs" />
+    <Compile Include="Data\ColumnTransferer.cs" />
+    <Compile Include="Data\ConfigurationManager.cs" />
+    <Compile Include="Data\Constants.cs" />
+    <Compile Include="Data\Exceptions\OpenGenotypeFileException.cs" />
+    <Compile Include="Data\Exceptions\OpenManifestException.cs" />
+    <Compile Include="Data\ExtractFromLocus.cs" />
+    <Compile Include="Data\FileLastRowsSampler.cs" />
+    <Compile Include="Data\FileMerger_Consecutive.cs" />
+    <Compile Include="Data\GenotypeFileComparer.cs" />
+    <Compile Include="Data\GenotypefileManifestMapper.cs" />
+    <Compile Include="Data\InternalReportMerger.cs" />
+    <Compile Include="Data\InternalReportSplitter.cs" />
+    <Compile Include="Data\LargeFileToolData.cs" />
+    <Compile Include="Data\LocusFileSearcher.cs" />
+    <Compile Include="Data\MappedColumnRowReader.cs" />
+    <Compile Include="Data\ReadComparisonReportFile.cs" />
+    <Compile Include="Data\ReadCriteria.cs" />
+    <Compile Include="Data\ReadManifestFile.cs" />
+    <Compile Include="Data\ReadVCFBaseReferenceFile.cs" />
+    <Compile Include="Data\ReadVCFExportFile.cs" />
+    <Compile Include="Data\RowExtractorGeneral.cs" />
+    <Compile Include="Data\TestClass.cs" />
+    <Compile Include="Data\UniqueItemExtractor.cs" />
+    <Compile Include="IO\ExportConflictingForwardFromManifest.cs" />
+    <Compile Include="IO\ExportMarkersFromComparisonReport.cs" />
+    <Compile Include="IO\GetCommonMarkersFromManifest.cs" />
+    <Compile Include="IO\GetConflictMarkersInPlus.cs" />
+    <Compile Include="IO\GetConflictsInVCFExportFile.cs" />
+    <Compile Include="IO\GetNumberOfMarkersFromManifest.cs" />
+    <Compile Include="IO\ReadGenotypFile\ReadGenotypeFile.cs" />
+    <Compile Include="IO\ReadGenotypFile\ReadGenotypeFileMarkersInColumns.cs" />
+    <Compile Include="IO\ScanConflictMarkersPlusInFolder.cs" />
+    <Compile Include="UI\Controller\CopyListViewMenu.cs" />
+    <Compile Include="UI\Dialog\AdjustLocusDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\AdjustLocusDialog.Designer.cs">
+      <DependentUpon>AdjustLocusDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\ExportConlictingForwardFromManifestDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\ExportConlictingForwardFromManifestDialog.Designer.cs">
+      <DependentUpon>ExportConlictingForwardFromManifestDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\ExportMarkersFromComparisonReportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\ExportMarkersFromComparisonReportDialog.Designer.cs">
+      <DependentUpon>ExportMarkersFromComparisonReportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\ExtractFromLocusDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\ExtractFromLocusDialog.Designer.cs">
+      <DependentUpon>ExtractFromLocusDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\ExtractRowsFromFilesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\ExtractRowsFromFilesDialog.Designer.cs">
+      <DependentUpon>ExtractRowsFromFilesDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\FindLocusWithManifestDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\FindLocusWithManifestDialog.Designer.cs">
+      <DependentUpon>FindLocusWithManifestDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GenotypCompareDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GenotypCompareDialog.Designer.cs">
+      <DependentUpon>GenotypCompareDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GenotypefileManifestMapperDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GenotypefileManifestMapperDialog.Designer.cs">
+      <DependentUpon>GenotypefileManifestMapperDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GetCommonMarkersFromManifestsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GetCommonMarkersFromManifestsDialog.Designer.cs">
+      <DependentUpon>GetCommonMarkersFromManifestsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GetConflictMarkersDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GetConflictMarkersDialog.Designer.cs">
+      <DependentUpon>GetConflictMarkersDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GetConflictsFromVCFExcportDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GetConflictsFromVCFExcportDialog.Designer.cs">
+      <DependentUpon>GetConflictsFromVCFExcportDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GetConflictsInPlusVCF_ManifestDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GetConflictsInPlusVCF_ManifestDialog.Designer.cs">
+      <DependentUpon>GetConflictsInPlusVCF_ManifestDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GetNumberMarkersDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GetNumberMarkersDialog.Designer.cs">
+      <DependentUpon>GetNumberMarkersDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GetUniqueItemsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GetUniqueItemsDialog.Designer.cs">
+      <DependentUpon>GetUniqueItemsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\GetValueDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\GetValueDialog.Designer.cs">
+      <DependentUpon>GetValueDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\LargeFileToolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\LargeFileToolForm.Designer.cs">
+      <DependentUpon>LargeFileToolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\ListDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\ListDialog.Designer.cs">
+      <DependentUpon>ListDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\MergeFilesAfterEachOtherDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\MergeFilesAfterEachOtherDialog.Designer.cs">
+      <DependentUpon>MergeFilesAfterEachOtherDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\ScanManifestConflictsPlusDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\ScanManifestConflictsPlusDialog.Designer.cs">
+      <DependentUpon>ScanManifestConflictsPlusDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\ShowErrorDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\ShowErrorDialog.Designer.cs">
+      <DependentUpon>ShowErrorDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\SpecialForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\SpecialForm.Designer.cs">
+      <DependentUpon>SpecialForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\BackgroundWorkerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\BackgroundWorkerDialog.designer.cs">
+      <DependentUpon>BackgroundWorkerDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data\FileInfoExtractor.cs" />
+    <Compile Include="Data\FileSampler.cs" />
+    <Compile Include="UI\Dialog\CopyPasteColumns.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\CopyPasteColumns.Designer.cs">
+      <DependentUpon>CopyPasteColumns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\SaveSettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\SaveSettingsDialog.Designer.cs">
+      <DependentUpon>SaveSettingsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Dialog\MergeFiles_Columns.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Dialog\MergeFiles_Columns.Designer.cs">
+      <DependentUpon>MergeFiles_Columns.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\View\SortedListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\View\SortedListView.Designer.cs">
+      <DependentUpon>SortedListView.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="UI\Dialog\AdjustLocusDialog.resx">
+      <DependentUpon>AdjustLocusDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\ExportConlictingForwardFromManifestDialog.resx">
+      <DependentUpon>ExportConlictingForwardFromManifestDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\ExportMarkersFromComparisonReportDialog.resx">
+      <DependentUpon>ExportMarkersFromComparisonReportDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\ExtractFromLocusDialog.resx">
+      <DependentUpon>ExtractFromLocusDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\ExtractRowsFromFilesDialog.resx">
+      <DependentUpon>ExtractRowsFromFilesDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\FindLocusWithManifestDialog.resx">
+      <DependentUpon>FindLocusWithManifestDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GenotypCompareDialog.resx">
+      <DependentUpon>GenotypCompareDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GenotypefileManifestMapperDialog.resx">
+      <DependentUpon>GenotypefileManifestMapperDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GetCommonMarkersFromManifestsDialog.resx">
+      <DependentUpon>GetCommonMarkersFromManifestsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GetConflictMarkersDialog.resx">
+      <DependentUpon>GetConflictMarkersDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GetConflictsFromVCFExcportDialog.resx">
+      <DependentUpon>GetConflictsFromVCFExcportDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GetConflictsInPlusVCF_ManifestDialog.resx">
+      <DependentUpon>GetConflictsInPlusVCF_ManifestDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GetNumberMarkersDialog.resx">
+      <DependentUpon>GetNumberMarkersDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GetUniqueItemsDialog.resx">
+      <DependentUpon>GetUniqueItemsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\GetValueDialog.resx">
+      <DependentUpon>GetValueDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\MergeFilesAfterEachOtherDialog.resx">
+      <DependentUpon>MergeFilesAfterEachOtherDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\ScanManifestConflictsPlusDialog.resx">
+      <DependentUpon>ScanManifestConflictsPlusDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\SpecialForm.resx">
+      <DependentUpon>SpecialForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\BackgroundWorkerDialog.resx">
+      <DependentUpon>BackgroundWorkerDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\CopyPasteColumns.resx">
+      <DependentUpon>CopyPasteColumns.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\SaveSettingsDialog.resx">
+      <DependentUpon>SaveSettingsDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Dialog\MergeFiles_Columns.resx">
+      <DependentUpon>MergeFiles_Columns.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Data\RowFindExtractor.cs" />
+    <Compile Include="Data\RowReader.cs" />
+    <Compile Include="Data\RowStartExtractor.cs" />
+    <Compile Include="Data\TextReplacer.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
