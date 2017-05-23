@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows.Forms;
 using LargeFileTool.Data;
 using LargeFileTool.UI.Dialog;
+using FlexibleStreamHandling;
 
 namespace LargeFileTool.UI
 {
@@ -201,31 +203,38 @@ namespace LargeFileTool.UI
                 return;
             }
             targetFilePath = MySaveFileDialog.FileName;
+            using (var targetStream = new FileIOStream(targetFilePath, FileMode.Create, FileAccess.Write))
+            {
+                if (SampleRadioButton.Checked)
+                {
+                    fs = new FileSampler(bwd.Worker, MyRowReader, targetFilePath, (int) SampleIntervalNumeric.Value,
+                        (int) SampleFirstNumeric.Value, -1);
+                }
+                else if (SampleLastRadioButton.Checked)
+                {
+                    flrs = new FileLastRowsSampler(bwd.Worker, MyRowReader, targetFilePath,
+                        (int) LastRowsNumericUpDown.Value);
+                }
+                else if (FindReplaceRadioButton.Checked)
+                {
+                    //tr = new TextReplacer(bwd.Worker, MyRowReader, targetFilePath, FindTextBox.Text, ReplaceTextBox.Text);
+                    tr = new TextReplacer(bwd.Worker, InputFileTextBox.Text, targetFilePath, FindTextBox.Text,
+                        ReplaceTextBox.Text);
+                }
+                else if (ExtractRadioButton.Checked)
+                {
+                    rfe = new RowFindExtractor(bwd.Worker, MyRowReader, targetStream, ExtractTextBox.Text,
+                        NegCriteriaCheckBox.Checked);
+                }
+                else if (ReadRowStartsRadioButton.Checked)
+                {
+                    rse = new RowStartExtractor(bwd.Worker, MyRowReader, targetFilePath,
+                        (int) RowStartCharactersNumeric.Value);
+                }
 
-            if (SampleRadioButton.Checked)
-            {
-                fs = new FileSampler(bwd.Worker, MyRowReader, targetFilePath, (int)SampleIntervalNumeric.Value, (int)SampleFirstNumeric.Value, -1);
-            }
-            else if (SampleLastRadioButton.Checked)
-            { 
-                flrs = new FileLastRowsSampler(bwd.Worker, MyRowReader, targetFilePath, (int)LastRowsNumericUpDown.Value);
-            }
-            else if (FindReplaceRadioButton.Checked)
-            {
-                //tr = new TextReplacer(bwd.Worker, MyRowReader, targetFilePath, FindTextBox.Text, ReplaceTextBox.Text);
-                tr = new TextReplacer(bwd.Worker, InputFileTextBox.Text, targetFilePath, FindTextBox.Text, ReplaceTextBox.Text);
-            }
-            else if (ExtractRadioButton.Checked)
-            {
-                rfe = new RowFindExtractor(bwd.Worker, MyRowReader, targetFilePath, ExtractTextBox.Text, NegCriteriaCheckBox.Checked);
-            }
-            else if (ReadRowStartsRadioButton.Checked)
-            {
-                rse = new RowStartExtractor(bwd.Worker, MyRowReader, targetFilePath, (int)RowStartCharactersNumeric.Value);
-            }
 
-
-            bwd.Start();
+                bwd.Start();
+            }
             if (FindReplaceRadioButton.Checked && tr != null)
             {
                 infoStr = tr.Occurences.ToString() + " matches replaced!";                
