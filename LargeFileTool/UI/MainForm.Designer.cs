@@ -490,11 +490,11 @@ namespace LargeFileTool.UI
             // MyOpenFileDialog
             // 
             this.MyOpenFileDialog.FileName = "File";
-            this.MyOpenFileDialog.Filter = "Csv files|*.csv|Text files|*.txt|All files|*.*";
+            this.MyOpenFileDialog.Filter = "All files|*.*|Csv files|*.csv|Text files|*.txt";
             // 
             // MySaveFileDialog
             // 
-            this.MySaveFileDialog.Filter = "Csv files|*.csv|Text files|*.txt|All files|*.*";
+            this.MySaveFileDialog.Filter = "All files|*.*|Csv files|*.csv|Text files|*.txt";
             // 
             // ReadingCriteriaGroupBox
             // 

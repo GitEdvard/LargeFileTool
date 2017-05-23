@@ -181,6 +181,11 @@ namespace LargeFileTool.UI
                 ShowWarning("Please select input file!");
                 return;
             }
+            MySaveFileDialog.ShowDialog(this);
+            if (MySaveFileDialog.FileName == "")
+            {
+                return;
+            }
             var targetFilePath = MySaveFileDialog.FileName;
 
             using (var targetStream = new FileIOStream(targetFilePath, FileMode.Create, FileAccess.Write))
@@ -198,11 +203,6 @@ namespace LargeFileTool.UI
                     return;
                 }
 
-                MySaveFileDialog.ShowDialog(this);
-                if (MySaveFileDialog.FileName == "")
-                {
-                    return;
-                }
                 if (SampleRadioButton.Checked)
                 {
                     fs = new FileSampler(bwd.Worker, _rowReader, targetFilePath, (int) SampleIntervalNumeric.Value,

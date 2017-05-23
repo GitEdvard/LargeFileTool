@@ -16,7 +16,7 @@ namespace LargeFileTool.Data
         public RowFindExtractor(BackgroundWorker worker, RowReader rowReader, FlexibleStream targetStream, string findText, bool negCritera)
         {
             _backgroundWorker = worker;
-            _findText = findText;
+            _findText = findText.Replace("\\t", "\t");
             _rowReader = rowReader;
             _targetStream = targetStream;
             if (negCritera)
@@ -29,7 +29,7 @@ namespace LargeFileTool.Data
             }
         }
 
-        private void Extract(object sender, DoWorkEventArgs e)
+        public void Extract(object sender, DoWorkEventArgs e)
         {
             int totalCounter = 0, occurrenceCounter = 0;
 
