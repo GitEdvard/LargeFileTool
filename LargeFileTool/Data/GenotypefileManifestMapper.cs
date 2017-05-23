@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
-using Molmed.LargeFileTool.Data;
 using LargeFileTool.IO.ReadGenotypFile;
 using LargeFileTool.Data.Exceptions;
 

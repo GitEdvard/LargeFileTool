@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Molmed.LargeFileTool.UI;
+using LargeFileTool.UI;
 
 namespace LargeFileTool
 {

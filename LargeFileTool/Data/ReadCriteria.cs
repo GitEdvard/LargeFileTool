@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Molmed.LargeFileTool.Data
+﻿namespace LargeFileTool.Data
 {
     public class ReadCriteria
     {

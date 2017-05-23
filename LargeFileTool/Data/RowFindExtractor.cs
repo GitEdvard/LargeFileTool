@@ -1,117 +1,94 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.ComponentModel;
+using System.IO;
+using System.Text;
+using FlexibleStreamHandling;
 
-namespace Molmed.LargeFileTool.Data
+namespace LargeFileTool.Data
 {
     public class RowFindExtractor
     {
-        String MyTargetFilePath, MyFindText;
-        BackgroundWorker MyBackgroundWorker;
-        RowReader MyRowReader;
+        private readonly String _findText;
+        private readonly BackgroundWorker _backgroundWorker;
+        private readonly RowReader _rowReader;
+        private readonly FlexibleStream _targetStream;
 
-        public RowFindExtractor(BackgroundWorker worker, RowReader rowReader, string targetFilePath, string findText, bool negCritera)
+        public RowFindExtractor(BackgroundWorker worker, RowReader rowReader, FlexibleStream targetStream, string findText, bool negCritera)
         {
-            MyBackgroundWorker = worker;
-            MyTargetFilePath = targetFilePath;
-            MyFindText = findText;
-            MyRowReader = rowReader;
+            _backgroundWorker = worker;
+            _findText = findText.Replace("\\t", "\t");
+            _rowReader = rowReader;
+            _targetStream = targetStream;
             if (negCritera)
             {
-                MyBackgroundWorker.DoWork += new DoWorkEventHandler(ExtractNeg);
+                _backgroundWorker.DoWork += ExtractNeg;
             }
             else
             {
-                MyBackgroundWorker.DoWork += new DoWorkEventHandler(Extract);
+                _backgroundWorker.DoWork += Extract;
             }
         }
 
         public void Extract(object sender, DoWorkEventArgs e)
         {
-            StreamWriter sw = null;
             int totalCounter = 0, occurrenceCounter = 0;
-            string textLine;
 
             try
             {
-                sw = new StreamWriter(MyTargetFilePath, false, Encoding.GetEncoding(1252));
-
-                while (MyRowReader.ReadLine())
+                while (_rowReader.ReadLine())
                 {
-                    textLine = MyRowReader.GetLine();
-                    if (textLine.Contains(MyFindText))
+                    var textLine = _rowReader.GetLine();
+                    if (textLine.Contains(_findText))
                     {
-                        sw.WriteLine(MyRowReader.GetLineEntireRow());
+                        _targetStream.WriteLine(_rowReader.GetLineEntireRow());
                         occurrenceCounter++;
                     }
                     if (++totalCounter % 1000 == 0)
                     {
-                        MyBackgroundWorker.ReportProgress(0, "Processing line " + totalCounter.ToString());
-                        if (MyBackgroundWorker.CancellationPending)
+                        _backgroundWorker.ReportProgress(0, "Processing line " + totalCounter);
+                        if (_backgroundWorker.CancellationPending)
                         {
                             return;
                         }
                     }
                 }
-                e.Result = "Extracted " + occurrenceCounter.ToString() + " lines containing the specified text.";
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
+                e.Result = "Extracted " + occurrenceCounter + " lines containing the specified text.";
             }
             finally
             {
-                MyRowReader.Close();
-                if (sw != null)
-                {
-                    sw.Close();
-                }
+                _rowReader.Close();
             }
 
         }
 
-        public void ExtractNeg(object sender, DoWorkEventArgs e)
+        private void ExtractNeg(object sender, DoWorkEventArgs e)
         {
-            StreamWriter sw = null;
             int totalCounter = 0, occurrenceCounter = 0;
-            string textLine;
 
             try
             {
-                sw = new StreamWriter(MyTargetFilePath, false, Encoding.GetEncoding(1252));
-
-                while (MyRowReader.ReadLine())
+                while (_rowReader.ReadLine())
                 {
-                    textLine = MyRowReader.GetLine();
-                    if (!textLine.Contains(MyFindText))
+                    var textLine = _rowReader.GetLine();
+                    if (!textLine.Contains(_findText))
                     {
-                        sw.WriteLine(MyRowReader.GetLineEntireRow());
+                        _targetStream.WriteLine(_rowReader.GetLineEntireRow());
                         occurrenceCounter++;
                     }
                     if (++totalCounter % 1000 == 0)
                     {
-                        MyBackgroundWorker.ReportProgress(0, "Processing line " + totalCounter.ToString());
-                        if (MyBackgroundWorker.CancellationPending)
+                        _backgroundWorker.ReportProgress(0, "Processing line " + totalCounter);
+                        if (_backgroundWorker.CancellationPending)
                         {
                             return;
                         }
                     }
                 }
-                e.Result = "Extracted " + occurrenceCounter.ToString() + " lines containing the specified text.";
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
+                e.Result = "Extracted " + occurrenceCounter + " lines containing the specified text.";
             }
             finally
             {
-                MyRowReader.Close();
-                if (sw != null)
-                {
-                    sw.Close();
-                }
+                _rowReader.Close();
             }
 
         }

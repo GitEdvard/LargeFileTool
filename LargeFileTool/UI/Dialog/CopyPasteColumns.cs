@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using Molmed.LargeFileTool.Data;
+using FlexibleStreamHandling;
+using LargeFileTool.Data;
 
-namespace Molmed.LargeFileTool.UI.Dialog
+namespace LargeFileTool.UI.Dialog
 {
     public partial class CopyPasteColumns : Form
     {
@@ -399,7 +395,8 @@ namespace Molmed.LargeFileTool.UI.Dialog
 
             
             bwd = new BackgroundWorkerDialog();
-            rowReader = new RowReader(sourceFilePath, "", null, true);
+            var stream = new FileIOStream(sourceFilePath);
+            rowReader = new RowReader(stream, "", null, true);
 
             fileSampler = new FileSampler(bwd.Worker, rowReader, destinationFilePath, 1, 0, 2450007);
             bwd.Start();

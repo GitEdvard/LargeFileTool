@@ -49,3 +49,5 @@ Temporary Items
 # My additions
 bin/
 obj/
+.suo
+packages/

@@ -1,0 +1,2 @@
+Related libraries can be downloaded from https://github.com/GitEdvard
+FlexibleStreamHandling.dll

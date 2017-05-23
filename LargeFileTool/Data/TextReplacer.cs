@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.ComponentModel;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Molmed.LargeFileTool.Data
+namespace LargeFileTool.Data
 {
     public class TextReplacer
     {

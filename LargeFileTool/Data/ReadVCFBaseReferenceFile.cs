@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using LargeFileTool.Data.Exceptions;
 using LargeFileTool.Database;
 
 namespace LargeFileTool.Data
@@ -190,7 +191,7 @@ namespace LargeFileTool.Data
 
             if (!GoToLineZero())
             {
-                throw new Molmed.LargeFileTool.Data.Exceptions.OpenManifestException("One or more of the columns ''" + COLUMN_SNPNAME + "'', ''" +
+                throw new OpenManifestException("One or more of the columns ''" + COLUMN_SNPNAME + "'', ''" +
                     COLUMN_SNPCHR + "'', ''" + COLUMN_SNPPOS + "'', ''" + COLUMN_SNPREFSTRAND +
                     COLUMN_SNPVAR + "'', ''" + COLUMN_REFLENGTH + "'', ''" + COLUMN_REFBASE + "'', ''" +
                     " is missing in the VCF base reference file!");

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using LargeFileTool.Data.Exceptions;
 using LargeFileTool.Database;
 
 namespace LargeFileTool.Data
@@ -118,7 +119,7 @@ namespace LargeFileTool.Data
         {
             if (!GoToLineZero())
             {
-                throw new Molmed.LargeFileTool.Data.Exceptions.OpenManifestException("One or more of the columns ''" + COLUMN_ID + "'', ''" +
+                throw new OpenManifestException("One or more of the columns ''" + COLUMN_ID + "'', ''" +
                     COLUMN_REF + "'', ''" + COLUMN_ALT + "'', ''" +
                     " is missing in the VCF export file!");
             }
