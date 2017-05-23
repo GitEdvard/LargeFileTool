@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
+using LargeFileTool.Data.Exceptions;
 using LargeFileTool.Database;
 
 namespace LargeFileTool.Data
@@ -254,7 +255,7 @@ namespace LargeFileTool.Data
             MyIntensityOnlyIndex = NO_INDEX;
             if (!GoToLineZero())
             {
-                throw new Molmed.LargeFileTool.Data.Exceptions.OpenManifestException("One or more of the columns ''" + COLUMN_NAME + "'', ''" +
+                throw new OpenManifestException("One or more of the columns ''" + COLUMN_NAME + "'', ''" +
                     COLUMN_SOURCE_SEQ + "'', ''" + COLUMN_CHROMOSOME + "'', ''" + COLUMN_SNP +
                     COLUMN_ILMNID + "'', ''" + COLUMN_ILMNSTRAND + "'', ''"  + COLUMN_SOURCE_STRAND + "'', ''" +
                     " is missing in the manifest file!");

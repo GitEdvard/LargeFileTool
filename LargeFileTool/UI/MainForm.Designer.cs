@@ -1,4 +1,4 @@
-namespace Molmed.LargeFileTool.UI
+namespace LargeFileTool.UI
 {
     partial class MainForm
     {

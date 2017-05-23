@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using Molmed.LargeFileTool.UI.Dialog;
-using Molmed.LargeFileTool.Data;
 using LargeFileTool.Data;
+using LargeFileTool.UI.Dialog;
 
-namespace Molmed.LargeFileTool.UI
+namespace LargeFileTool.UI
 {
     public partial class MainForm : Form
     {

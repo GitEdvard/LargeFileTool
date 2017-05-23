@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 
-namespace Molmed.LargeFileTool.Data
+namespace LargeFileTool.Data
 {
     public class ColumnTransferer
     {

@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace Molmed.LargeFileTool.UI.Dialog
+namespace LargeFileTool.UI.Dialog
 {
     public partial class BackgroundWorkerDialog : Form
     {

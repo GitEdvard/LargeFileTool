@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.ComponentModel;
-using Molmed.LargeFileTool.Data;
+using System.Windows.Forms;
 using LargeFileTool.Data;
 
-namespace Molmed.LargeFileTool.UI.Controller
+namespace LargeFileTool.UI.Controller
 {
     public class CopyListViewMenu : LargeFileToolData
     {

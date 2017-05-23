@@ -1,4 +1,4 @@
-﻿namespace Molmed.LargeFileTool.UI.Dialog
+﻿namespace LargeFileTool.UI.Dialog
 {
     partial class ShowErrorDialog
     {

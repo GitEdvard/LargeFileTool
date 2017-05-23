@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Molmed.LargeFileTool.Data.Exceptions
+namespace LargeFileTool.Data.Exceptions
 {
     public class OpenManifestException : ApplicationException
     {

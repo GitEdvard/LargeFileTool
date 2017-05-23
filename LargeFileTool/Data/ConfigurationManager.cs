@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace Molmed.LargeFileTool.Data
+namespace LargeFileTool.Data
 {
     public class ConfigurationManager
     {
