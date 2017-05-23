@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
+using FlexibleStreamHandling;
 using LargeFileTool.Data;
 
 namespace LargeFileTool.UI.Dialog
@@ -394,7 +395,8 @@ namespace LargeFileTool.UI.Dialog
 
             
             bwd = new BackgroundWorkerDialog();
-            rowReader = new RowReader(sourceFilePath, "", null, true);
+            var stream = new FileIOStream(sourceFilePath);
+            rowReader = new RowReader(stream, "", null, true);
 
             fileSampler = new FileSampler(bwd.Worker, rowReader, destinationFilePath, 1, 0, 2450007);
             bwd.Start();

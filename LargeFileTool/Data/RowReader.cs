@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using FlexibleStreamHandling;
 
 namespace LargeFileTool.Data
 {
@@ -12,22 +13,22 @@ namespace LargeFileTool.Data
             EntireRows,
             RowCriterias
         }
-        private readonly String _sourceFilePath;
         private readonly String _separatorText;
         private String _textLine;
         private readonly List<ReadCriteria> _readCriterias;
         private StreamReader _streamReader;
         private ReadingState _readingState;
         private string[] _textLineSplitted;
+        private FlexibleStream _stream;
         // test comment
 
-        public RowReader(string sourceFilePath, string keyString, List<ReadCriteria> readCriterias, bool entireRows)
+        public RowReader(FlexibleStream sourceStream, string keyString, List<ReadCriteria> readCriterias, bool entireRows)
         {
-            _sourceFilePath = sourceFilePath;
             _separatorText = GetKeyString(keyString);
             _readCriterias = readCriterias;
             _textLine = "";
-            _streamReader = new StreamReader(sourceFilePath, Encoding.GetEncoding(1252));
+            _stream = sourceStream;
+            _streamReader = _stream.GetReader();
             SetReadingState(entireRows);
         }
 
@@ -132,8 +133,7 @@ namespace LargeFileTool.Data
 
         public void Reset()
         {
-            Close();
-            _streamReader = new StreamReader(_sourceFilePath, Encoding.GetEncoding(1252));
+            _streamReader = _stream.GetReader();
         }
 
         private void SetReadingState(bool entireRows)

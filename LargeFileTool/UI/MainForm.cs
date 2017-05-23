@@ -13,6 +13,7 @@ namespace LargeFileTool.UI
         private String _keyString;
         private List<ReadCriteria> _criterias;
         private RowReader _rowReader;
+
         public MainForm()
         {
             InitializeComponent();
@@ -26,15 +27,14 @@ namespace LargeFileTool.UI
             //findManifestOriginToolStripMenuItem_Click(null, null);            
             //exportMarkersFromCompReportplusToolStripMenuItem_Click_1(null, null);
             //compareTwoFilesToolStripMenuItem_Click(null, null);
-            
         }
 
         private void AddCriteriaButton_Click(object sender, EventArgs e)
         {
-            var firstOccurence = (int)KeyStringNumeric1.Value;
-            var secondOccurence = (int)KeyStringNumeric2.Value;
+            var firstOccurence = (int) KeyStringNumeric1.Value;
+            var secondOccurence = (int) KeyStringNumeric2.Value;
             if (CheckKeyStringCriteria(firstOccurence, secondOccurence))
-            { 
+            {
                 _criterias.Add(new ReadCriteria(firstOccurence, secondOccurence));
                 var criteriaText = GetCriteriaString(firstOccurence, secondOccurence);
                 MultipleReadCriteriaListBox.Items.Add(criteriaText);
@@ -47,8 +47,8 @@ namespace LargeFileTool.UI
 
         private void AddLastCriteria()
         {
-            var firstOccurence = (int)KeyStringNumeric1.Value;
-            var secondOccurence = (int)KeyStringNumeric2.Value;
+            var firstOccurence = (int) KeyStringNumeric1.Value;
+            var secondOccurence = (int) KeyStringNumeric2.Value;
             if (CheckKeyStringCriteria(firstOccurence, secondOccurence))
             {
                 _criterias.Add(new ReadCriteria(firstOccurence, secondOccurence));
@@ -134,6 +134,7 @@ namespace LargeFileTool.UI
             }
             return "the " + firstNumber + "to the " + secondNumber + "of the string '" + _keyString + "'";
         }
+
         private void Init()
         {
             _keyString = "";
@@ -173,32 +174,35 @@ namespace LargeFileTool.UI
 
             if (!CheckForm())
             {
-                return; 
+                return;
             }
-            if (!SetRowReader())
+            if (string.IsNullOrEmpty(InputFileTextBox.Text))
             {
                 ShowWarning("Please select input file!");
                 return;
             }
-
-            var bwd = new BackgroundWorkerDialog();
-            var infoStr = "Task is finished!";
-
-            if (FileInfoRadiobutton.Checked)
-            {
-                fie = new FileInfoExtractor(bwd.Worker, _rowReader);
-                bwd.Start();
-                return;
-            }
-
-            MySaveFileDialog.ShowDialog(this);
-            if (MySaveFileDialog.FileName == "")
-            {
-                return;
-            }
             var targetFilePath = MySaveFileDialog.FileName;
+
             using (var targetStream = new FileIOStream(targetFilePath, FileMode.Create, FileAccess.Write))
+            using (var inputStream = new FileIOStream(InputFileTextBox.Text))
             {
+                _rowReader = new RowReader(inputStream, _keyString, _criterias, ReadEntireRowsRadioButton.Checked);
+
+                var bwd = new BackgroundWorkerDialog();
+                var infoStr = "Task is finished!";
+
+                if (FileInfoRadiobutton.Checked)
+                {
+                    fie = new FileInfoExtractor(bwd.Worker, _rowReader);
+                    bwd.Start();
+                    return;
+                }
+
+                MySaveFileDialog.ShowDialog(this);
+                if (MySaveFileDialog.FileName == "")
+                {
+                    return;
+                }
                 if (SampleRadioButton.Checked)
                 {
                     fs = new FileSampler(bwd.Worker, _rowReader, targetFilePath, (int) SampleIntervalNumeric.Value,
@@ -228,12 +232,12 @@ namespace LargeFileTool.UI
 
 
                 bwd.Start();
+                if (FindReplaceRadioButton.Checked && tr != null)
+                {
+                    infoStr = tr.Occurences + " matches replaced!";
+                }
+                MessageBox.Show(infoStr, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            if (FindReplaceRadioButton.Checked && tr != null)
-            {
-                infoStr = tr.Occurences + " matches replaced!";                
-            }
-            MessageBox.Show(infoStr, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void OptionRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -284,7 +288,7 @@ namespace LargeFileTool.UI
             KeyStringNumeric2.Enabled = false;
             AddCriteriaButton.Enabled = false;
             ClearCriteriaButton.Enabled = false;
-            MultipleReadCriteriaListBox.BackColor = System.Drawing.SystemColors.Control;            
+            MultipleReadCriteriaListBox.BackColor = System.Drawing.SystemColors.Control;
 
             if (ReadBetweenColumnsRadioButton.Checked)
             {
@@ -297,23 +301,12 @@ namespace LargeFileTool.UI
             }
         }
 
-        private bool SetRowReader()
-        {
-            if (InputFileTextBox.Text == "")
-            {
-                return false;
-            }
-            _rowReader?.Close();
-            _rowReader = new RowReader(InputFileTextBox.Text, _keyString, _criterias, ReadEntireRowsRadioButton.Checked);
-            return true;
-        }
-
         private void ShowWarning(String message)
         {
             MessageBox.Show(message,
-                           "Warning",
-                           MessageBoxButtons.OK,
-                           MessageBoxIcon.Exclamation);
+                "Warning",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Exclamation);
         }
 
         private void mergeFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -370,7 +363,6 @@ namespace LargeFileTool.UI
 
         private void mooreToolsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void compareGenotypeFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -387,7 +379,6 @@ namespace LargeFileTool.UI
 
         private void handleLocusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void adjustLocusToReadableToolStripMenuItem_Click(object sender, EventArgs e)
@@ -398,7 +389,6 @@ namespace LargeFileTool.UI
 
         private void addSamplePrefixToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void compareTwoFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -454,6 +444,5 @@ namespace LargeFileTool.UI
             var exportMarkersFromComparisonReportDialog = new ExportMarkersFromComparisonReportDialog();
             exportMarkersFromComparisonReportDialog.ShowDialog();
         }
-
     }
 }
