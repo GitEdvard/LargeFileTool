@@ -10,9 +10,9 @@ namespace LargeFileTool.UI
 {
     public partial class MainForm : Form
     {
-        private String MyKeyString;
-        private List<ReadCriteria> MyCriterias;
-        private RowReader MyRowReader;
+        private String _keyString;
+        private List<ReadCriteria> _criterias;
+        private RowReader _rowReader;
         public MainForm()
         {
             InitializeComponent();
@@ -31,14 +31,12 @@ namespace LargeFileTool.UI
 
         private void AddCriteriaButton_Click(object sender, EventArgs e)
         {
-            int firstOccurence, secondOccurence;
-            String criteriaText;
-            firstOccurence = (int)KeyStringNumeric1.Value;
-            secondOccurence = (int)KeyStringNumeric2.Value;
+            var firstOccurence = (int)KeyStringNumeric1.Value;
+            var secondOccurence = (int)KeyStringNumeric2.Value;
             if (CheckKeyStringCriteria(firstOccurence, secondOccurence))
             { 
-                MyCriterias.Add(new ReadCriteria(firstOccurence, secondOccurence));
-                criteriaText = GetCriteriaString(firstOccurence, secondOccurence);
+                _criterias.Add(new ReadCriteria(firstOccurence, secondOccurence));
+                var criteriaText = GetCriteriaString(firstOccurence, secondOccurence);
                 MultipleReadCriteriaListBox.Items.Add(criteriaText);
             }
             else
@@ -49,12 +47,11 @@ namespace LargeFileTool.UI
 
         private void AddLastCriteria()
         {
-            int firstOccurence, secondOccurence;
-            firstOccurence = (int)KeyStringNumeric1.Value;
-            secondOccurence = (int)KeyStringNumeric2.Value;
+            var firstOccurence = (int)KeyStringNumeric1.Value;
+            var secondOccurence = (int)KeyStringNumeric2.Value;
             if (CheckKeyStringCriteria(firstOccurence, secondOccurence))
             {
-                MyCriterias.Add(new ReadCriteria(firstOccurence, secondOccurence));
+                _criterias.Add(new ReadCriteria(firstOccurence, secondOccurence));
                 MultipleReadCriteriaListBox.Items.Add(GetCriteriaString(firstOccurence, secondOccurence));
             }
         }
@@ -63,13 +60,13 @@ namespace LargeFileTool.UI
         {
             if (ReadBetweenColumnsRadioButton.Checked)
             {
-                if (MyKeyString == "")
+                if (_keyString == "")
                 {
                     ShowWarning("No key string is entered!");
                     return false;
                 }
                 AddLastCriteria();
-                if (MyCriterias.Count == 0)
+                if (_criterias.Count == 0)
                 {
                     ShowWarning("There is no valid criterias for reading the file!");
                     return false;
@@ -84,7 +81,7 @@ namespace LargeFileTool.UI
             {
                 return false;
             }
-            foreach (ReadCriteria criteria in MyCriterias)
+            foreach (ReadCriteria criteria in _criterias)
             {
                 if (criteria.IsNested(firstOccurence, secondOccurence))
                 {
@@ -96,7 +93,7 @@ namespace LargeFileTool.UI
 
         private void ClearCriteriaButton_Click(object sender, EventArgs e)
         {
-            MyCriterias.Clear();
+            _criterias.Clear();
             MultipleReadCriteriaListBox.Items.Clear();
         }
 
@@ -135,16 +132,16 @@ namespace LargeFileTool.UI
                     secondNumber = secondOccurence + "th occurence ";
                     break;
             }
-            return "the " + firstNumber + "to the " + secondNumber + "of the string '" + MyKeyString + "'";
+            return "the " + firstNumber + "to the " + secondNumber + "of the string '" + _keyString + "'";
         }
         private void Init()
         {
-            MyKeyString = "";
+            _keyString = "";
             KeyStringTextBox.Text = ",";
-            MyCriterias = new List<ReadCriteria>();
+            _criterias = new List<ReadCriteria>();
             SetControlStatus();
             SetReadingStatus();
-            MyRowReader = null;
+            _rowReader = null;
         }
 
         private void InputFileBrowseButton_Click(object sender, EventArgs e)
@@ -160,22 +157,19 @@ namespace LargeFileTool.UI
 
         private void KeyStringTextBox_TextChanged(object sender, EventArgs e)
         {
-            MyKeyString = KeyStringTextBox.Text;
-            KeyStringLabel.Text = "'" + MyKeyString + "'";
-            KeyStringLabel2.Text = "'" + MyKeyString + "'";
+            _keyString = KeyStringTextBox.Text;
+            KeyStringLabel.Text = "'" + _keyString + "'";
+            KeyStringLabel2.Text = "'" + _keyString + "'";
         }
 
         private void ProcessButton_Click(object sender, EventArgs e)
         {
-            BackgroundWorkerDialog bwd;
             FileSampler fs;
             FileLastRowsSampler flrs;
             TextReplacer tr = null;
             RowStartExtractor rse;
             RowFindExtractor rfe;
             FileInfoExtractor fie;
-            string targetFilePath;
-            string infoStr;
 
             if (!CheckForm())
             {
@@ -187,12 +181,12 @@ namespace LargeFileTool.UI
                 return;
             }
 
-            bwd = new BackgroundWorkerDialog();
-            infoStr = "Task is finished!";
+            var bwd = new BackgroundWorkerDialog();
+            var infoStr = "Task is finished!";
 
             if (FileInfoRadiobutton.Checked)
             {
-                fie = new FileInfoExtractor(bwd.Worker, MyRowReader);
+                fie = new FileInfoExtractor(bwd.Worker, _rowReader);
                 bwd.Start();
                 return;
             }
@@ -202,33 +196,33 @@ namespace LargeFileTool.UI
             {
                 return;
             }
-            targetFilePath = MySaveFileDialog.FileName;
+            var targetFilePath = MySaveFileDialog.FileName;
             using (var targetStream = new FileIOStream(targetFilePath, FileMode.Create, FileAccess.Write))
             {
                 if (SampleRadioButton.Checked)
                 {
-                    fs = new FileSampler(bwd.Worker, MyRowReader, targetFilePath, (int) SampleIntervalNumeric.Value,
+                    fs = new FileSampler(bwd.Worker, _rowReader, targetFilePath, (int) SampleIntervalNumeric.Value,
                         (int) SampleFirstNumeric.Value, -1);
                 }
                 else if (SampleLastRadioButton.Checked)
                 {
-                    flrs = new FileLastRowsSampler(bwd.Worker, MyRowReader, targetFilePath,
+                    flrs = new FileLastRowsSampler(bwd.Worker, _rowReader, targetFilePath,
                         (int) LastRowsNumericUpDown.Value);
                 }
                 else if (FindReplaceRadioButton.Checked)
                 {
-                    //tr = new TextReplacer(bwd.Worker, MyRowReader, targetFilePath, FindTextBox.Text, ReplaceTextBox.Text);
+                    //tr = new TextReplacer(bwd.Worker, _rowReader, targetFilePath, FindTextBox.Text, ReplaceTextBox.Text);
                     tr = new TextReplacer(bwd.Worker, InputFileTextBox.Text, targetFilePath, FindTextBox.Text,
                         ReplaceTextBox.Text);
                 }
                 else if (ExtractRadioButton.Checked)
                 {
-                    rfe = new RowFindExtractor(bwd.Worker, MyRowReader, targetStream, ExtractTextBox.Text,
+                    rfe = new RowFindExtractor(bwd.Worker, _rowReader, targetStream, ExtractTextBox.Text,
                         NegCriteriaCheckBox.Checked);
                 }
                 else if (ReadRowStartsRadioButton.Checked)
                 {
-                    rse = new RowStartExtractor(bwd.Worker, MyRowReader, targetFilePath,
+                    rse = new RowStartExtractor(bwd.Worker, _rowReader, targetFilePath,
                         (int) RowStartCharactersNumeric.Value);
                 }
 
@@ -237,7 +231,7 @@ namespace LargeFileTool.UI
             }
             if (FindReplaceRadioButton.Checked && tr != null)
             {
-                infoStr = tr.Occurences.ToString() + " matches replaced!";                
+                infoStr = tr.Occurences + " matches replaced!";                
             }
             MessageBox.Show(infoStr, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -309,25 +303,17 @@ namespace LargeFileTool.UI
             {
                 return false;
             }
-            if (MyRowReader != null)
-            {
-                MyRowReader.Close();
-            }
-            MyRowReader = new RowReader(InputFileTextBox.Text, MyKeyString, MyCriterias, ReadEntireRowsRadioButton.Checked);
+            _rowReader?.Close();
+            _rowReader = new RowReader(InputFileTextBox.Text, _keyString, _criterias, ReadEntireRowsRadioButton.Checked);
             return true;
         }
 
-        protected void ShowWarning(String message)
+        private void ShowWarning(String message)
         {
             MessageBox.Show(message,
                            "Warning",
                            MessageBoxButtons.OK,
                            MessageBoxIcon.Exclamation);
-        }
-
-        private void copyPasteColumnsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void mergeFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -336,58 +322,49 @@ namespace LargeFileTool.UI
 
         private void copyPasteColumnsToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            CopyPasteColumns copyPasteColumns;
-            copyPasteColumns = new CopyPasteColumns();
+            var copyPasteColumns = new CopyPasteColumns();
             copyPasteColumns.ShowDialog();
         }
 
         private void specialToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SpecialForm specialForm;
-            specialForm = new SpecialForm();
+            var specialForm = new SpecialForm();
             specialForm.ShowDialog();
         }
 
         private void columnWiseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MergeFiles_Columns mergeFiles_Columns;
-            mergeFiles_Columns = new MergeFiles_Columns();
+            var mergeFiles_Columns = new MergeFiles_Columns();
             mergeFiles_Columns.ShowDialog();
-
         }
 
         private void afterEachOtherToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MergeFilesAfterEachOtherDialog mergeFilesDialog;
-            mergeFilesDialog = new MergeFilesAfterEachOtherDialog();
+            var mergeFilesDialog = new MergeFilesAfterEachOtherDialog();
             mergeFilesDialog.ShowDialog();
         }
 
         private void getUniqueItemsFromListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetUniqueItemsDialog getUniqueItemsDialog;
-            getUniqueItemsDialog = new GetUniqueItemsDialog();
+            var getUniqueItemsDialog = new GetUniqueItemsDialog();
             getUniqueItemsDialog.ShowDialog();
         }
 
         private void getConflictInForwardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExportConlictingForwardFromManifestDialog exportConlictDialog;
-            exportConlictDialog = new ExportConlictingForwardFromManifestDialog();
+            var exportConlictDialog = new ExportConlictingForwardFromManifestDialog();
             exportConlictDialog.ShowDialog();
         }
 
         private void getNumberOfMarkersToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetNumberMarkersDialog getNumberMarkersDialog;
-            getNumberMarkersDialog = new GetNumberMarkersDialog();
+            var getNumberMarkersDialog = new GetNumberMarkersDialog();
             getNumberMarkersDialog.ShowDialog();
         }
 
         private void getCommonMarkersFromManifestsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetCommonMarkersFromManifestsDialog getCommonMarkersFromManifestsDialog;
-            getCommonMarkersFromManifestsDialog = new GetCommonMarkersFromManifestsDialog();
+            var getCommonMarkersFromManifestsDialog = new GetCommonMarkersFromManifestsDialog();
             getCommonMarkersFromManifestsDialog.ShowDialog();
         }
 
@@ -404,8 +381,7 @@ namespace LargeFileTool.UI
 
         private void ëxtractFromLocusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExtractFromLocusDialog extractFromLocusDialog;
-            extractFromLocusDialog = new ExtractFromLocusDialog();
+            var extractFromLocusDialog = new ExtractFromLocusDialog();
             extractFromLocusDialog.ShowDialog();
         }
 
@@ -427,65 +403,55 @@ namespace LargeFileTool.UI
 
         private void compareTwoFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetConflictMarkersDialog getConflictMarkersDialog;
-            getConflictMarkersDialog = new GetConflictMarkersDialog();
+            var getConflictMarkersDialog = new GetConflictMarkersDialog();
             getConflictMarkersDialog.ShowDialog();
-
         }
 
         private void scanDirectoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ScanManifestConflictsPlusDialog scanManifestConflictsPlusDialog;
-            scanManifestConflictsPlusDialog = new ScanManifestConflictsPlusDialog();
+            var scanManifestConflictsPlusDialog = new ScanManifestConflictsPlusDialog();
             scanManifestConflictsPlusDialog.ShowDialog();
         }
 
         private void findLocusForSpecificManfiestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FindLocusWithManifestDialog findLocusWithManifestDialog;
-            findLocusWithManifestDialog = new FindLocusWithManifestDialog();
+            var findLocusWithManifestDialog = new FindLocusWithManifestDialog();
             findLocusWithManifestDialog.ShowDialog();
         }
 
         private void compareVCFVsManifestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetConflictsInPlusVCF_ManifestDialog getConflictsInPlusVCF_ManifestDialog;
-            getConflictsInPlusVCF_ManifestDialog = new GetConflictsInPlusVCF_ManifestDialog();
+            var getConflictsInPlusVCF_ManifestDialog = new GetConflictsInPlusVCF_ManifestDialog();
             getConflictsInPlusVCF_ManifestDialog.ShowDialog();
         }
 
         private void extractFromFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExtractRowsFromFilesDialog extractRowsFromFilesDialog;
-            extractRowsFromFilesDialog = new ExtractRowsFromFilesDialog();
+            var extractRowsFromFilesDialog = new ExtractRowsFromFilesDialog();
             extractRowsFromFilesDialog.ShowDialog();
         }
 
         private void scanVCFExportFileForConflictsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetConflictsFromVCFExcportDialog getConflictsFromVCFExcportDialog;
-            getConflictsFromVCFExcportDialog = new GetConflictsFromVCFExcportDialog();
+            var getConflictsFromVCFExcportDialog = new GetConflictsFromVCFExcportDialog();
             getConflictsFromVCFExcportDialog.ShowDialog();
         }
 
         private void findManifestOriginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GenotypefileManifestMapperDialog genotypefileManifestMapperDialog;
-            genotypefileManifestMapperDialog = new GenotypefileManifestMapperDialog();
+            var genotypefileManifestMapperDialog = new GenotypefileManifestMapperDialog();
             genotypefileManifestMapperDialog.ShowDialog();
         }
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TestForm testForm;
-            testForm = new TestForm();
+            var testForm = new TestForm();
             testForm.ShowDialog();
         }
 
         private void exportMarkersFromCompReportplusToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            ExportMarkersFromComparisonReportDialog exportMarkersFromComparisonReportDialog;
-            exportMarkersFromComparisonReportDialog = new ExportMarkersFromComparisonReportDialog();
+            var exportMarkersFromComparisonReportDialog = new ExportMarkersFromComparisonReportDialog();
             exportMarkersFromComparisonReportDialog.ShowDialog();
         }
 

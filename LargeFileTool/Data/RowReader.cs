@@ -12,84 +12,28 @@ namespace LargeFileTool.Data
             EntireRows,
             RowCriterias
         }
-        private String MySourceFilePath, MySeparatorText, MyTextLine;
-        private List<ReadCriteria> MyReadCriterias;
-        private StreamReader MyStreamReader;
-        private ReadingState MyReadingState;
-        private string[] MyTextLineSplitted;
+        private readonly String _sourceFilePath;
+        private readonly String _separatorText;
+        private String _textLine;
+        private readonly List<ReadCriteria> _readCriterias;
+        private StreamReader _streamReader;
+        private ReadingState _readingState;
+        private string[] _textLineSplitted;
         // test comment
 
         public RowReader(string sourceFilePath, string keyString, List<ReadCriteria> readCriterias, bool entireRows)
         {
-            MySourceFilePath = sourceFilePath;
-            MySeparatorText = GetKeyString(keyString);
-            MyReadCriterias = readCriterias;
-            MyTextLine = "";
-            MyStreamReader = new StreamReader(sourceFilePath, Encoding.GetEncoding(1252));
+            _sourceFilePath = sourceFilePath;
+            _separatorText = GetKeyString(keyString);
+            _readCriterias = readCriterias;
+            _textLine = "";
+            _streamReader = new StreamReader(sourceFilePath, Encoding.GetEncoding(1252));
             SetReadingState(entireRows);
         }
 
         public void Close()
         {
-            if (MyStreamReader != null)
-            {
-                MyStreamReader.Close();
-            }
-        }
-
-        public String FindReplace(String findText, String replaceText, out int occurenceCounter)
-        {
-            switch (MyReadingState)
-            { 
-                case ReadingState.EntireRows:
-                    return FindReplaceEntireRow(findText, replaceText, out occurenceCounter);
-                case ReadingState.RowCriterias:
-                    return FindReplaceSplitted(findText, replaceText, out occurenceCounter);
-                default:
-                    return FindReplaceEntireRow(findText, replaceText, out occurenceCounter);
-            }
-        }
-
-        private String FindReplaceEntireRow(String findText, String replaceText, out int occurenceCounter)
-        {
-            StringBuilder processedTextLine = new StringBuilder();
-            String[] dummy;
-            occurenceCounter = 0;
-
-            dummy = MyTextLine.Split(new string[] { findText }, StringSplitOptions.None);
-            occurenceCounter += (dummy.Length - 1);
-            MyTextLine = MyTextLine.Replace(findText, replaceText);
-            return MyTextLine;
-        }
-
-        private String FindReplaceSplitted(String findText, String replaceText, out int occurenceCounter)
-        {
-            StringBuilder processedTextLine = new StringBuilder();
-            String[] dummy;
-
-            occurenceCounter = 0;
-            MyTextLineSplitted = MyTextLine.Split(new string[] { MySeparatorText }, StringSplitOptions.None);
-            for (int i = 0; i < MyTextLineSplitted.Length; i++)
-            {
-                foreach (ReadCriteria rcriteria in MyReadCriterias)
-                {
-                    if (rcriteria.ContainSegment(i))
-                    {
-                        dummy = MyTextLineSplitted[i].Split(new string[] { findText }, StringSplitOptions.None);
-                        occurenceCounter += (dummy.Length - 1);
-                        MyTextLineSplitted[i] = MyTextLineSplitted[i].Replace(findText, replaceText);
-                        break;
-                    }
-                }
-                // Re-assemble the textline
-                if (!(i == 0))
-                {
-                    processedTextLine.Append(MySeparatorText);
-                }
-                processedTextLine.Append(MyTextLineSplitted[i]);
-            }
-            MyTextLine = processedTextLine.ToString();
-            return MyTextLine;
+            _streamReader?.Close();
         }
 
         private String GetKeyString(String str)
@@ -108,7 +52,7 @@ namespace LargeFileTool.Data
 
         public String GetLine()
         {
-            switch (MyReadingState)
+            switch (_readingState)
             {
                 case ReadingState.EntireRows:
                     return GetLineEntireRow();
@@ -121,23 +65,23 @@ namespace LargeFileTool.Data
 
         public int GetNumberColumns()
         {
-            MyTextLineSplitted = MyTextLine.Split(new string[] { MySeparatorText }, StringSplitOptions.None);
-            return MyTextLineSplitted.Length;
+            _textLineSplitted = _textLine.Split(new[] { _separatorText }, StringSplitOptions.None);
+            return _textLineSplitted.Length;
         }
 
         public String GetLineEntireRow()
         {
-            return MyTextLine;
+            return _textLine;
         }
 
         private String GetLineWithCriterias()
         {
             StringBuilder processedTextLine = new StringBuilder();
 
-            MyTextLineSplitted = MyTextLine.Split(new string[] { MySeparatorText }, StringSplitOptions.None);
-            if (MyTextLineSplitted.Length > 1)
+            _textLineSplitted = _textLine.Split(new[] { _separatorText }, StringSplitOptions.None);
+            if (_textLineSplitted.Length > 1)
             {
-                // If there was any occurences of MySeparatorText in the line
+                // If there was any occurences of _separatorText in the line
                 ProcessFirstCriteria(ref processedTextLine);
                 ProcessRestOfCriterias(ref processedTextLine);
             }
@@ -146,21 +90,19 @@ namespace LargeFileTool.Data
 
         private void ProcessFirstCriteria(ref StringBuilder processedTextLine)
         {
-            ReadCriteria rcriteria;
-            int segmentIndex;
-            if (MyReadCriterias.Count > 0 && MyTextLineSplitted.Length > MyReadCriterias[0].GetFirstOccurence())
+            if (_readCriterias.Count > 0 && _textLineSplitted.Length > _readCriterias[0].GetFirstOccurence())
             {
-                rcriteria = MyReadCriterias[0];
-                segmentIndex = rcriteria.GetFirstOccurence();
-                processedTextLine.Append(MyTextLineSplitted[segmentIndex]);
+                var rcriteria = _readCriterias[0];
+                var segmentIndex = rcriteria.GetFirstOccurence();
+                processedTextLine.Append(_textLineSplitted[segmentIndex]);
                 for (int j = rcriteria.GetFirstOccurence() + 1; j < rcriteria.GetSecondOccurence(); j++)
                 {
-                    if (j >= MyTextLineSplitted.Length)
+                    if (j >= _textLineSplitted.Length)
                     {
                         break;
                     }
-                    processedTextLine.Append(MySeparatorText);
-                    processedTextLine.Append(MyTextLineSplitted[j]);
+                    processedTextLine.Append(_separatorText);
+                    processedTextLine.Append(_textLineSplitted[j]);
                 }
 
             }
@@ -168,43 +110,35 @@ namespace LargeFileTool.Data
 
         private void ProcessRestOfCriterias(ref StringBuilder processedTextLine)
         {
-            ReadCriteria rcriteria;
-            for (int k = 1; k < MyReadCriterias.Count; k++)
+            for (int k = 1; k < _readCriterias.Count; k++)
             {
-                rcriteria = MyReadCriterias[k];
+                var rcriteria = _readCriterias[k];
                 for (int j = rcriteria.GetFirstOccurence(); j < rcriteria.GetSecondOccurence(); j++)
                 {
-                    if (j >= MyTextLineSplitted.Length)
+                    if (j >= _textLineSplitted.Length)
                     {
                         break;
                     }
-                    processedTextLine.Append(MySeparatorText);
-                    processedTextLine.Append(MyTextLineSplitted[j]);
+                    processedTextLine.Append(_separatorText);
+                    processedTextLine.Append(_textLineSplitted[j]);
                 }
             }
         }
 
         public bool ReadLine()
         {
-            return (MyTextLine = MyStreamReader.ReadLine()) != null;
+            return (_textLine = _streamReader.ReadLine()) != null;
         }
 
         public void Reset()
         {
             Close();
-            MyStreamReader = new StreamReader(MySourceFilePath, Encoding.GetEncoding(1252));
+            _streamReader = new StreamReader(_sourceFilePath, Encoding.GetEncoding(1252));
         }
 
-        public void SetReadingState(bool entireRows)
+        private void SetReadingState(bool entireRows)
         {
-            if (entireRows)
-            {
-                MyReadingState = ReadingState.EntireRows;
-            }
-            else
-            {
-                MyReadingState = ReadingState.RowCriterias;
-            }
+            _readingState = entireRows ? ReadingState.EntireRows : ReadingState.RowCriterias;
         }
     }
 }
